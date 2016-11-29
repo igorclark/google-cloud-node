@@ -571,6 +571,7 @@ PubSub.prototype.subscribe = function(topic, subName, options, callback) {
  *   // message.id = ID used to acknowledge its receival.
  *   // message.data = Contents of the message.
  *   // message.attributes = Attributes of the message.
+ *   // message.timestamp = Timestamp when PubSub received the message.
  * });
  */
 PubSub.prototype.subscription = function(name, options) {

@@ -126,6 +126,7 @@ var PUBSUB_API_TIMEOUT = 90000;
  *   // message.id = ID of the message.
  *   // message.ackId = ID used to acknowledge the message receival.
  *   // message.data = Contents of the message.
+ *   // message.timestamp = Timestamp when PubSub received the message.
  *
  *   // Ack the message:
  *   // message.ack(callback);
@@ -332,8 +333,8 @@ function Subscription(pubsub, options) {
 modelo.inherits(Subscription, common.GrpcServiceObject, events.EventEmitter);
 
 /**
- * Simplify a message from an API response to have three properties, `id`,
- * `data` and `attributes`. `data` is always converted to a string.
+ * Simplify a message from an API response to have four properties, `id`,
+ * `data`, `attributes` and `timestamp`. `data` is always converted to a string.
  *
  * @private
  */
@@ -356,6 +357,14 @@ Subscription.formatMessage_ = function(msg, encoding) {
 
     if (innerMessage.attributes) {
       message.attributes = innerMessage.attributes;
+    }
+
+    if (innerMessage.publishTime) {
+      // innerMessagepublishTime.nanos is always 0 when using the PubSub emulator
+      if(innerMessage.publishTime.seconds && innerMessage.publishTime.nanos !== null ) {
+        var milliseconds = parseInt(innerMessage.publishTime.nanos, 10) / 1e6;
+        message.timestamp = new Date(parseInt(innerMessage.publishTime.seconds, 10) * 1000 + milliseconds);
+      }
     }
   }
 

@@ -273,13 +273,16 @@ describe('Subscription', function() {
       var obj = { hi: 'there' };
       var stringified = new Buffer(JSON.stringify(obj)).toString('base64');
       var attributes = {};
+      var publishTime = { seconds: '1480413405', nanos: 617000000 };
+      var timestamp = new Date( "2016-11-29T09:56:45.617Z" );
 
       var msg = Subscription.formatMessage_({
         ackId: 'abc',
         message: {
           data: stringified,
           messageId: 7,
-          attributes: attributes
+          attributes: attributes,
+          publishTime: publishTime
         }
       });
 
@@ -287,7 +290,8 @@ describe('Subscription', function() {
         ackId: 'abc',
         id: 7,
         data: obj,
-        attributes: attributes
+        attributes: attributes,
+        timestamp: timestamp
       });
     });
 
